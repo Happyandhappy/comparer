@@ -71,12 +71,3 @@ The used dataset may seem quite big at first glance as it contains 13,233 images
 * 4 persons have 76-200 images.
 * 2 persons have >=201 images.
 
-In order to generate pairs of images showing the same person you need a person with at least two images (unless you allow pairs of images where both images are identical). So only 1,680 persons can possibly be used for such a pair. Furthermore, any image already added to a dataset (training, validation, test) *must not appear in another dataset*. If you don't stick to that rule, your results will be completely skewed as the net can just start to memorize the image->person mapping and you are essentially testing whether your network is a good memorizer, but not whether it has learned a generalizing rule to compare faces.
-
-Because of these problems, the validation set is picked first, before the training set, so that it is less skewed (towards few people) than the training set. Additionally, a stratified sampling approach is used: First, a name is picked among all person names. Then, among all images of that person one image is picked. That is done two times for each pair. By doing this, early picked pairs should be less skewed (towards few people) than by just randomly picking images among all images (of all people). At the end, the validation set should be rather balanced, giving a better measurement of the true performance of the network. To decrease the resulting skew of the training set, the validation set size is kept small, at only 256 pairs, while the training set size is 40,000 pairs. All images that appear in the validation set are excluded from the picking process for the training set. (Sidenote: The picking process is also specifically designed in a way that exactly half of all picked pairs show the same person.)
-
-The following plot shows roughly the count of images per person and dataset (only calculated on pairs of images showing the same person, as those show skew earlier than pairs with different persons):
-
-![Dataset skew plot over training, val and test sets](images/example_experiment_skew.png?raw=true "Dataset skew plot over training, val and test sets")
-
-Notice how the counts of images per person are very uniform in the validation set as it was picked first.
